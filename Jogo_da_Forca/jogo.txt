@@ -1,0 +1,7 @@
+﻿P:Java
+D: Linguagem compilada para bytecode.
+D: Esta linguagem foi criada em 1990.
+D: Anteriormente, chamava-se OAK.
+P:Pascal
+D:Linguagem criada por Niklaus Wirth.
+D:Baseada em Algol.
