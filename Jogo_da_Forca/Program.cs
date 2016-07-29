@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+ * Jogo da Forca
+ * 
+ * Autor: Fábio Moura de Oliveira
+ * 
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
