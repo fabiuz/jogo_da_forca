@@ -961,6 +961,15 @@ namespace Jogo_da_Forca
             Console.Clear();
         }
 
+
+		/// <summary>
+		/// 	Este método verifica as teclas que o usuário deve utilizar no jogo.
+		/// 	F1 - Reinicia o jogo;
+		/// 	F2 - Ir para a próxima dica, se houver;
+		/// 	Esc - Sai do jogo
+		/// 	Verifica se a tecla é uma letra ou um número, se sim, o usuário chutou algum caractere.
+		/// </summary>
+		/// <returns>The teclas.</returns>
         private void Verificar_Teclas()
         {
             // Vamos capturar a tecla que foi pressionada.
@@ -987,7 +996,8 @@ namespace Jogo_da_Forca
                     break;
 
                 default:
-                    if (Char.IsLetter(tecla_pressionada.KeyChar) || Char.IsNumber(tecla_pressionada.KeyChar))
+					// Verifica se é uma tecla ou um número, se for, o usuário tentou adivinha alguma parte da palavra.
+					if (Char.IsLetter(tecla_pressionada.KeyChar) || Char.IsNumber(tecla_pressionada.KeyChar))
                     {
                         char cCaractere = tecla_pressionada.KeyChar;
                         cCaractere = Char.ToLower(cCaractere);
@@ -998,6 +1008,8 @@ namespace Jogo_da_Forca
                         bool bCaractere_Localizado = false;
 
                         // Vamos verificar se o caractere digitado pelo usuário existe em strPalavra.
+						// Se o caractere digitado pelo usuário existe mais de uma vez na palavra, devemos 
+						// marcá-lo como true.
                         for (int iA = 0; iA < strPalavra.Length; iA++)
                         {
                             if (strPalavra[iA] == cCaractere)
@@ -1015,20 +1027,21 @@ namespace Jogo_da_Forca
                         }
 
                         // Quando saírmos do loop, devemos verificar, se algum caractere foi localizado.
+						// Ou seja, só iremos chamar a função Exibir_Palavra, se algo foi encontrado.
                         if (bCaractere_Localizado)
                         {
                             Exibir_Palavra(true);
                         }
                         else
-                        {
-                        
+                        {  
+							// O usuário não adivinhou a letra da palavra, então, devemos, atualizar o boneco
+							// para indicar erro.
                             Atualizar_Boneco();
                             Desenhar_Boneco(false);
                             bAtualizar = true;
-
-
                         }
 
+						// Devemos atualizar a pontuação.
                         Exibir_Pontuacao();
 
 
@@ -1044,9 +1057,10 @@ namespace Jogo_da_Forca
                     break;
             }
         }
-
        
-        private const char cBORDA_DUPLA_HORIZONTAL = (char)0x2550;
+		// As constantes abaixo são utilizadas para definir cada caractere
+		// que será utilizado para desenhar a borda.
+		private const char cBORDA_DUPLA_HORIZONTAL = (char)0x2550;
         private const char cBORDA_DUPLA_ESQUERDA_SUPERIOR = (char)0x2554;
         private const char cBORDA_DUPLA_DIREITA_SUPERIOR = (char)0x2557;
         private const char cBORDA_DUPLA_ESQUERDA_INFERIOR = (char)0x255a;
@@ -1070,7 +1084,6 @@ namespace Jogo_da_Forca
         // Quantos espaços antes ou após a palavra, se for zero, não haverá 
         // espaço.
         private const int iBORDA_ESPACO_ANTES_APOS_PALAVRA = 2;
-
 
         // Desenha uma borda ao redor do texto.
         // Tal borda terá um título.
@@ -1189,8 +1202,11 @@ namespace Jogo_da_Forca
             Console.Write(strTexto);
         }
 
-
-
+		/// <summary>
+		/// 	Método para desenhar a bola da tela.
+		/// </summary>
+		/// <returns></returns>
+		/// <param name="strTitulo">O título a ser exibido na parte superior da janela</param>
         private void Desenhar_Borda_da_Janela(string strTitulo)
         {
             Console.SetCursorPosition(1, BORDA_JANELA_LINHA_SUPERIOR);
@@ -1219,7 +1235,14 @@ namespace Jogo_da_Forca
         }
 
 
-
+		/// <summary>
+		/// 	Esta função atualiza a dica para que o usuário tente adivinha a palavra.
+		/// 	Esta função é chamada toda vez que o usuário pressiona F2, se todas as dicas
+		/// 	da palavra já foram exibidas, retorna para a primeira dica.
+		/// 	Quando a palavra é descoberta, uma nova palavra é selecionada se houver e uma
+		/// 	nova dica é exibida, também, se houver.
+		/// </summary>
+		/// <returns></returns>
         private void Atualizar_Dica()
         {
             // Vamos centralizar a palavra dica
@@ -1267,8 +1290,14 @@ namespace Jogo_da_Forca
             Console.BackgroundColor = COR_DE_FUNDO;
         }
 
-        // Na parte inferior, informa o usuário, quais teclas pressionar.
+        
         private const int RODAPE_LINHA = BORDA_JANELA_LINHA_INFERIOR + 1;
+
+		/// <summary>
+		/// 	Exibe na parte inferior do console, as teclas que podem ser usadas para selecionar
+		/// um novo jogo, exibir a próxima dica, ou se deseja sair do jogo.
+		/// </summary>
+		/// <returns>The rodape informativo.</returns>
         private void Exibir_Rodape_Informativo()
         {
             string[] strInformativo = new string[] { " F1 - NOVO JOGO ", " F2 - DICA ", "ESC - SAIR" };
@@ -1302,17 +1331,18 @@ namespace Jogo_da_Forca
 
         }
 
-
-        // Esta função é chamada toda vez que uma letra da palavra for adivinhada.
-        // Quando todas as letras forem adivinhadas, apaga todas as letras da tela
-        // para ir para a próxima palavra.
-        // Quando bExibir_Palavra é true, iremos exibir a palavra.
-        // Quando bExibir_Palavra é false, iremos apagar a palavra atual, pois
-        // o usuário adivinhou todos os caracteres da palavra.
-
         // As letras das palavras são dispostas, conforme o valor da variável abaixo:
         private const int ESPACO_ENTRE_PALAVRAS = 3;
 
+		/// <summary>
+		/// 	Esta função é chamada toda vez que uma letra da palavra for adivinhada.
+		/// Quando todas as letras forem adivinhadas, apaga todas as letras da tela para
+		/// r para a próxima palavra, se houver.
+		/// </summary>
+		/// <returns>The palavra.</returns>
+		/// <param name="bExibir_Palavra">Será true, se a palavra será exibir, entretanto, falso,
+		/// se não deseja que seja exibida
+		/// </param>
         private void Exibir_Palavra(bool bExibir_Palavra)
         {
             bAtualizar = !bAtualizar;
@@ -1371,20 +1401,23 @@ namespace Jogo_da_Forca
             }
         }
 
-        // Esta função ajusta o console para se adaptar ao jogo.
+    	/// <summary>
+    	/// 	O jogo deve ser executado no console, utilizando no mínimo uma largura de 80 colunas por 30 linhas.
+    	/// </summary>
         void Ajustar_Console_Para_Jogo()
         {
             int Maximo_de_Colunas = Console.LargestWindowWidth;
             int Maximo_de_Linhas = Console.LargestWindowHeight;
 
             // Nosso jogo, será definido para 80 colunas por 35 linhas.
-            if(Maximo_de_Colunas < 80)
-            {
-                throw new Exception("O jogo deve ter no mínimo 80 colunas.");
-            }
+            //if(Maximo_de_Colunas < 80)
+            //{
+            //    throw new Exception("O jogo deve ter no mínimo 80 colunas.");
+            //}
 
             Console.SetWindowPosition(0, 0);
             Console.WindowWidth = 80;
+			Console.WindowHeight = 30;
         }
 
 
